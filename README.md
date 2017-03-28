@@ -1,3 +1,2 @@
 # Bikeshare
---
-###Deep Learning Nanodegree in Udacity
+Deep Learning Nanodegree in Udacity
