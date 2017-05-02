@@ -4,17 +4,17 @@ mnist = input_data.read_data_sets(".", one_hot=True, reshape=False)
 import tensorflow as tf
 
 # Parameters
-learning_rate = 0.00001
-epochs = 10
-batch_size = 128
+learning_rate = 0.00001 #학습률
+epochs = 10 #에폭
+batch_size = 128 #배치 사이즈
 
 # Number of samples to calculate validation and accuracy
 # Decrease this if you're running out of memory to calculate accuracy
 test_valid_size = 256
 
 # Network Parameters
-n_classes = 10  # MNIST total classes (0-9 digits)
-dropout = 0.75  # Dropout, probability to keep units
+n_classes = 10  # MNIST total classes (0-9 digits) #0에서 9까지. 숫자 판별
+dropout = 0.75  # Dropout, probability to keep units #Dropout 퍼센트
 
 
 # Store layers weight & bias
@@ -32,14 +32,16 @@ biases = {
 
 
 def conv2d(x, W, b, strides=1):
-    x = tf.nn.conv2d(x, W, strides=[1, strides, strides, 1], padding='SAME')
-    x = tf.nn.bias_add(x, b)
-    return tf.nn.relu(x)
+    x = tf.nn.conv2d(x, W, strides=[1, strides, strides, 1], padding='SAME') #4D 인풋으로 2D Convolution 계산. 필터를 병향
+    #(입력값, 가중치, 폭, 패딩 알고리즘) + use_cudnn_on_gpu :  - 기본 True, data_format : 입출력 데이터 형식, name : 작업이름
+    #Stride는 4개 요소 배열. [일괄 처리 stride? , 높이 stride, 너비 stride, feater stride?]
+    x = tf.nn.bias_add(x, b) #편향 추가
+    return tf.nn.relu(x) #Relu를 활성함수
 
-def maxpool2d(x, k=2):
+def maxpool2d(x, k=2): #맥스 풀링, k = 필터 사이즈
     return tf.nn.max_pool(x, ksize=[1, k, k, 1], strides=[1, k, k, 1], padding='SAME')
 
-def conv_net(x, weights, biases, dropout):
+def conv_net(x, weights, biases, dropout): #모델 생성
     # Layer 1 - 28*28*1 to 14*14*32
     conv1 = conv2d(x, weights['wc1'], biases['bc1'])
     conv1 = maxpool2d(conv1, k=2)
